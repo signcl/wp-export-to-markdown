@@ -92,7 +92,7 @@ Whether or not to organize output files into folders by month. You'll probably w
 
 - Argument: `--post-folders`
 - Type: `boolean`
-- Default: `true`
+- Default: `false`
 
 Whether or not to save files and images into post folders.
 
