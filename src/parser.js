@@ -68,10 +68,10 @@ function collectPosts(data, postTypes, config, authors) {
 				},
 				frontmatter: {
 					title: getPostTitle(post),
-					authors: getAuthorName(authors, getPostAuthor(post)),
+					authors: getAuthorName(authors, getPostAuthor(post), config),
 					date: getPostDate(post),
-					categories: getCategories(post),
-					tags: getTags(post)
+					categories: getCategories(post, config),
+					tags: getTags(post, config)
 				},
 				content: translator.getPostContent(post, turndownService, config)
 			}));
@@ -96,8 +96,9 @@ function collectAuthors(data) {
 	}));
 }
 
-function getAuthorName(authors, id) {
-	return authors.find(item => item.id == id).id; // use .name for author full name
+function getAuthorName(authors, id, config) {
+	const author = authors.find(item => item.id == id);
+	return config.useAuthorSlug ? author.id : author.name;
 }
 
 function getPostAuthor(post) {
@@ -138,23 +139,27 @@ function getPostDate(post) {
 	}
 }
 
-function getCategories(post) {
-	const categories = processCategoryTags(post, 'category');
+function getCategories(post, config) {
+	const categories = processCategoryTags(post, 'category', config);
 	return categories.filter(category => !settings.filter_categories.includes(category));
 }
 
-function getTags(post) {
-	return processCategoryTags(post, 'post_tag');
+function getTags(post, config) {
+	return processCategoryTags(post, 'post_tag', config);
 }
 
-function processCategoryTags(post, domain) {
+function processCategoryTags(post, domain, config) {
 	if (!post.category) {
 		return [];
 	}
 
 	return post.category
 		.filter(category => category.$.domain === domain)
-		.map(({ $: attributes }) => decodeURIComponent(attributes.nicename));
+		// .map(({ $: attributes }) => decodeURIComponent(attributes.nicename));
+		.map((item) => {
+			const tag = config.useTagSlug ? item.$.nicename : item._;
+			return decodeURIComponent(tag)
+		});
 }
 
 function collectAttachedImages(data) {

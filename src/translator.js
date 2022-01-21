@@ -57,7 +57,8 @@ function initTurndownService() {
 }
 
 function getPostContent(post, turndownService, config) {
-	let content = post.encoded[0];
+	const regex = new RegExp(config.contentReplaceFrom, 'g');
+	let content = post.encoded[0].replace(regex, config.contentReplaceTo)
 
 	// insert an empty div element between double line breaks
 	// this nifty trick causes turndown to keep adjacent paragraphs separated
