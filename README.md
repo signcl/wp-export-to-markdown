@@ -123,7 +123,7 @@ Either way, this can be combined with with `--year-folders` and `--month-folders
 
 - Argument: `--prefix-date`
 - Type: `boolean`
-- Default: `false`
+- Default: `true`
 
 Whether or not to prepend the post date to the post slug when naming a post's folder or file.
 
