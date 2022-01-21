@@ -73,7 +73,7 @@ const options = [
 		name: 'include-other-types',
 		type: 'boolean',
 		description: 'Include custom post types and pages',
-		default: false
+		default: true
 	},
 	{
 		name: 'use-tag-slug',
