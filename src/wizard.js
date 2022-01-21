@@ -74,7 +74,31 @@ const options = [
 		type: 'boolean',
 		description: 'Include custom post types and pages',
 		default: false
-	}
+	},
+	{
+		name: 'use-tag-slug',
+		type: 'boolean',
+		description: 'Use tag slug (instead of tag name, ie. VS Code -> vs-code) for post tags',
+		default: false
+	},
+	{
+		name: 'use-author-slug',
+		type: 'boolean',
+		description: 'Use author slug (username) instead of author fullname',
+		default: true
+	},
+	{
+		name: 'content-replace-from',
+		type: 'string',
+		description: 'Custom string to replace from in the content of posts',
+		default: 'https://openbayes.com/docs'
+	},
+	{
+		name: 'content-replace-to',
+		type: 'string',
+		description: 'Custom string to replace to in the content of posts',
+		default: '/docs'
+	},
 ];
 
 async function getConfig(argv) {
@@ -121,6 +145,10 @@ function extendOptionsData() {
 		folder: {
 			prompt: 'input',
 			coerce: coercePath
+		},
+		any: {
+			prompt: 'input',
+			coerce: coerceAny
 		}
 	};
 
@@ -186,6 +214,10 @@ function coerceBoolean(value) {
 
 function coercePath(value) {
 	return path.normalize(value);
+}
+
+function coerceAny(value) {
+	return value;
 }
 
 function validateFile(value) {
