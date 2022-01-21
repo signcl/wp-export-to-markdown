@@ -14,8 +14,9 @@ async function parseFilePromise(config) {
 		tagNameProcessors: [xml2js.processors.stripPrefix]
 	});
 
+	const authors = collectAuthors(data);
 	const postTypes = getPostTypes(data, config);
-	const posts = collectPosts(data, postTypes, config);
+	const posts = collectPosts(data, postTypes, config, authors);
 
 	const images = [];
 	if (config.saveAttachedImages) {
@@ -48,7 +49,7 @@ function getItemsOfType(data, type) {
 	return data.rss.channel[0].item.filter(item => item.post_type[0] === type);
 }
 
-function collectPosts(data, postTypes, config) {
+function collectPosts(data, postTypes, config, authors) {
 	// this is passed into getPostContent() for the markdown conversion
 	const turndownService = translator.initTurndownService();
 
@@ -67,6 +68,7 @@ function collectPosts(data, postTypes, config) {
 				},
 				frontmatter: {
 					title: getPostTitle(post),
+					authors: getAuthorName(authors, getPostAuthor(post)),
 					date: getPostDate(post),
 					categories: getCategories(post),
 					tags: getTags(post)
@@ -85,6 +87,21 @@ function collectPosts(data, postTypes, config) {
 		console.log(allPosts.length + ' posts found.');
 	}
 	return allPosts;
+}
+
+function collectAuthors(data) {
+	return data.rss.channel[0].author.map(item => ({
+		id: item.author_login[0],
+		name: item.author_display_name[0]
+	}));
+}
+
+function getAuthorName(authors, id) {
+	return authors.find(item => item.id == id).id; // use .name for author full name
+}
+
+function getPostAuthor(post) {
+	return post.creator[0];
 }
 
 function getPostId(post) {
