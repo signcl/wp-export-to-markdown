@@ -26,7 +26,7 @@ async function processPayloadsPromise(payloads, loadFunc) {
 			}
 		}, payload.delay);
 	}));
-	
+
 	const results = await Promise.allSettled(promises);
 	const failedCount = results.filter(result => result.status === 'rejected').length;
 	if (failedCount === 0) {
@@ -103,7 +103,7 @@ async function writeImageFilesPromise(posts, config) {
 	let delay = 0;
 	const payloads = posts.flatMap(post => {
 		const postPath = getPostPath(post, config);
-		const imagesDir = path.join(path.dirname(postPath), 'images');
+		const imagesDir = path.join(path.dirname(postPath), config.imageBase);
 		return post.meta.imageUrls.flatMap(imageUrl => {
 			const filename = shared.getFilenameFromUrl(imageUrl);
 			const destinationPath = path.join(imagesDir, filename);

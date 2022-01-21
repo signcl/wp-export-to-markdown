@@ -99,6 +99,12 @@ const options = [
 		description: 'Custom string to replace to in the content of posts',
 		default: '/docs'
 	},
+	{
+		name: 'image-base',
+		type: 'folder',
+		description: 'Images base folder (no trailing slash)',
+		default: '/img/blog'
+	},
 ];
 
 async function getConfig(argv) {
