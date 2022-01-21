@@ -26,7 +26,7 @@ async function parseFilePromise(config) {
 		images.push(...collectScrapedImages(data, postTypes));
 	}
 
-	mergeImagesIntoPosts(images, posts);
+	mergeImagesIntoPosts(images, posts, config);
 
 	return posts;
 }
@@ -201,7 +201,7 @@ function collectScrapedImages(data, postTypes) {
 	return images;
 }
 
-function mergeImagesIntoPosts(images, posts) {
+function mergeImagesIntoPosts(images, posts, config) {
 	images.forEach(image => {
 		posts.forEach(post => {
 			let shouldAttach = false;
@@ -214,7 +214,7 @@ function mergeImagesIntoPosts(images, posts) {
 			// this image was set as the featured image for this post
 			if (image.id === post.meta.coverImageId) {
 				shouldAttach = true;
-				post.frontmatter.image = shared.getFilenameFromUrl(image.url);
+				post.frontmatter.image = `${config.imageBase}/${shared.getFilenameFromUrl(image.url)}`;
 			}
 
 			if (shouldAttach && !post.meta.imageUrls.includes(image.url)) {
